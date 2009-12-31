@@ -1,5 +1,7 @@
 = FriendlyId
 
+This fork is to work on open issue #16 : http://github.com/norman/friendly_id/issues#issue/16
+
 FriendlyId is the "Swiss Army bulldozer" of slugging and permalink plugins for
 Ruby on Rails. It allows you to create pretty URL's and work with
 human-friendly strings as if they were numeric ids for ActiveRecord models.
