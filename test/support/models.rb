@@ -37,6 +37,13 @@ class CreateSupportModels < ActiveRecord::Migration
     create_table :users do |t|
       t.string :name
     end
+    create_table :profiles do |t|
+      t.string :name
+    end
+    create_table :writing_samples do |t|
+      t.string :title
+      t.integer :profile_id
+    end
   end
 
   def self.down

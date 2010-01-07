@@ -2,6 +2,9 @@ module FriendlyId::NonSluggableInstanceMethods
 
   def self.included(base)
     base.validate :validate_friendly_id
+    base.class_eval do
+      after_save :update_association_slugs
+    end
   end
 
   attr :found_using_friendly_id
@@ -40,6 +43,22 @@ module FriendlyId::NonSluggableInstanceMethods
 
   def found_using_friendly_id=(value) #:nodoc#
     @found_using_friendly_id = value
+  end
+  
+  def update_association_slugs
+    self.class.reflect_on_all_associations.each do |assoc| 
+      case assoc.macro
+        when :has_many, :has_and_belongs_to_many then send(assoc.name).each { |related_object| update_slugs related_object }
+        when :has_one then update_slugs send(assoc.name)
+      end
+    end
+  end
+  
+  def update_slugs related_object
+    if related_object.class.friendly_id_options[:use_slug]
+      friendly_id_was = self.send(self.class.friendly_id_options[:method].to_s + '_was')
+      Slug.find_all_by_sluggable_type_and_scope(related_object.class.name, friendly_id_was).each {|slug| slug.scope = self.friendly_id; slug.save }
+    end
   end
 
 end

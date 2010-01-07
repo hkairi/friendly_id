@@ -73,6 +73,18 @@ class User < ActiveRecord::Base
   has_friendly_id :name
 end
 
+# A model that that uses slugs and has_many of a model that doesn't use slugs
+class Profile < ActiveRecord::Base
+  has_friendly_id :name
+  has_many :writing_samples
+end
+
+# A model that uses slugs and has a scope from a model without slugs
+class WritingSample < ActiveRecord::Base
+  has_friendly_id :title, :use_slug => true, :scope => :profile
+  belongs_to :profile
+end
+
 # A model that uses default slug settings and has a named scope
 class Post < ActiveRecord::Base
   has_friendly_id :name, :use_slug => true
