@@ -46,18 +46,18 @@ module FriendlyId::NonSluggableInstanceMethods
   end
   
   def update_association_slugs
+    friendly_id_was = self.send(self.class.friendly_id_options[:method].to_s + '_was')
     self.class.reflect_on_all_associations.each do |assoc| 
       case assoc.macro
-        when :has_many, :has_and_belongs_to_many then send(assoc.name).each { |related_object| update_slugs related_object }
-        when :has_one then update_slugs send(assoc.name)
+        when :has_many, :has_and_belongs_to_many then send(assoc.name).each { |related_object| update_slugs related_object, friendly_id_was }
+        when :has_one then update_slugs send(assoc.name), friendly_id_was
       end
     end
   end
   
-  def update_slugs related_object
+  def update_slugs related_object, friendly_id_was
     if related_object.class.friendly_id_options[:use_slug]
-      friendly_id_was = self.send(self.class.friendly_id_options[:method].to_s + '_was')
-      Slug.find_all_by_sluggable_type_and_scope(related_object.class.name, friendly_id_was).each {|slug| slug.scope = self.friendly_id; slug.save }
+      Slug.find_all_by_sluggable_type_and_scope(related_object.class.name, friendly_id_was).each {|slug| slug.update_attribute :scope, self.friendly_id}
     end
   end
 
