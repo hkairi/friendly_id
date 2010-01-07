@@ -59,12 +59,11 @@ class ScopedModelTest < Test::Unit::TestCase
       end
     end
     
-    should "find a scoped record after the base scope has had it's non-slugged id updated" do 
+    should "find a single scoped record after the base scope has had it's non-slugged friendly_id updated" do 
       profile = Profile.create!(:name => "profile1")
       writing_sample = profile.writing_samples.create(:title => "My Sample", :profile => profile)
-      profile.name = 'profile2'
-      profile.save
-      assert profile.writing_samples.find(writing_sample.friendly_id, :scope => profile.name)
+      profile.update_attribute :name, 'profile2'
+      assert WritingSample.find(writing_sample.friendly_id, :scope => profile.name)
     end
 
   end
