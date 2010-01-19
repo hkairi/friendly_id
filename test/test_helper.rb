@@ -8,6 +8,7 @@ require 'rubygems'
 require 'test/unit'
 require 'contest'
 require 'mocha'
+require 'ruby-debug'
 
 # You can use "rake test AR_VERSION=2.2.3" to test against 2.2.3 for example.
 # The default is to use the latest installed ActiveRecord.
@@ -51,6 +52,7 @@ end
 
 # A model with a custom slug text normalizer
 class Person < ActiveRecord::Base
+  belongs_to :country
   has_friendly_id :name, :use_slug => true do |text|
     text.upcase
   end
@@ -65,6 +67,7 @@ end
 # A model used as a scope
 class Country < ActiveRecord::Base
   has_many :people
+  has_many :residents
   has_friendly_id :name, :use_slug => true
 end
 

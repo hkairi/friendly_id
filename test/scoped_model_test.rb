@@ -65,6 +65,12 @@ class ScopedModelTest < Test::Unit::TestCase
       profile.update_attribute :name, 'profile2'
       assert WritingSample.find(writing_sample.friendly_id, :scope => profile.name)
     end
+    
+    should "find a single scoped record after the base scope (which also uses slugs) has had it's slugged friendly_id updated" do
+      @usa.name = 'Britian'
+      @usa.save
+      assert Resident.find(@resident.friendly_id, :scope => @usa.friendly_id)
+    end
 
   end
 

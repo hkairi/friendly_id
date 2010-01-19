@@ -1,4 +1,7 @@
+require "friendly_id/common_instance_methods"
+
 module FriendlyId::SluggableInstanceMethods
+  include CommonInstanceMethods
 
   def self.included(base)
     base.class_eval do
@@ -138,6 +141,7 @@ private
   # Set the slug using the generated friendly id.
   def set_slug
     if self.class.friendly_id_options[:use_slug] && new_slug_needed?
+      @prior_slug = @most_recent_slug
       @most_recent_slug = nil
       slug_attributes = {:name => slug_text}
       if friendly_id_options[:scope]
@@ -156,6 +160,11 @@ private
       send "#{cache_column}=", slug.to_friendly_id
       send :update_without_callbacks
     end
+    update_association_slugs
+  end
+  
+  def update_association_slugs
+    update_associated_slugs(@prior_slug.name) if @prior_slug
   end
 
 end

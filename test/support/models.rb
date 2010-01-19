@@ -25,6 +25,7 @@ class CreateSupportModels < ActiveRecord::Migration
     end
     create_table :people do |t|
       t.string :name
+      t.integer :country_id
     end
     create_table :posts do |t|
       t.string :name
