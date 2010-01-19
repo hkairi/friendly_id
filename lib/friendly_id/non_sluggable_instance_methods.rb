@@ -1,7 +1,7 @@
 require "friendly_id/common_instance_methods"
 
 module FriendlyId::NonSluggableInstanceMethods
-  include CommonInstanceMethods
+  include FriendlyId::CommonInstanceMethods
 
   def self.included(base)
     base.validate :validate_friendly_id

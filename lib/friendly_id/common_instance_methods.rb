@@ -1,4 +1,4 @@
-module CommonInstanceMethods
+module FriendlyId::CommonInstanceMethods
   
   def update_associated_slugs friendly_id_was
     self.class.reflect_on_all_associations.each do |assoc| 

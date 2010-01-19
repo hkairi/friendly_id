@@ -1,7 +1,7 @@
 require "friendly_id/common_instance_methods"
 
 module FriendlyId::SluggableInstanceMethods
-  include CommonInstanceMethods
+  include FriendlyId::CommonInstanceMethods
 
   def self.included(base)
     base.class_eval do
