@@ -101,5 +101,8 @@ class SlugTest < Test::Unit::TestCase
       assert_equal "検-索", Slug::normalize("検 索")
     end
 
+    should "remove smart quotes" do
+      assert_equal("triband-in-münster", Slug::normalize("„Triband“ in Münster"))
+    end
   end
 end

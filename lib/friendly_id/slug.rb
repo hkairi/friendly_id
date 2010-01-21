@@ -30,6 +30,7 @@ class Slug < ActiveRecord::Base
     def normalize(slug_text)
       return "" if slug_text.nil? || slug_text == ""
       ActiveSupport::Multibyte.proxy_class.new(slug_text.to_s).normalize(:kc).
+        gsub(/[„“]/u, '"').
         gsub(/[\W]/u, ' ').
         strip.
         gsub(/\s+/u, '-').
