@@ -25,6 +25,7 @@ class CreateSupportModels < ActiveRecord::Migration
     end
     create_table :people do |t|
       t.string :name
+      t.integer :country_id
     end
     create_table :posts do |t|
       t.string :name
@@ -36,6 +37,13 @@ class CreateSupportModels < ActiveRecord::Migration
     end
     create_table :users do |t|
       t.string :name
+    end
+    create_table :profiles do |t|
+      t.string :name
+    end
+    create_table :writing_samples do |t|
+      t.string :title
+      t.integer :profile_id
     end
   end
 

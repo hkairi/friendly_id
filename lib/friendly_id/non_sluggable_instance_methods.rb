@@ -1,7 +1,13 @@
+require "friendly_id/common_instance_methods"
+
 module FriendlyId::NonSluggableInstanceMethods
+  include FriendlyId::CommonInstanceMethods
 
   def self.included(base)
     base.validate :validate_friendly_id
+    base.class_eval do
+      after_save :update_association_slugs
+    end
   end
 
   attr :found_using_friendly_id
@@ -40,6 +46,10 @@ module FriendlyId::NonSluggableInstanceMethods
 
   def found_using_friendly_id=(value) #:nodoc#
     @found_using_friendly_id = value
+  end
+  
+  def update_association_slugs
+    update_associated_slugs(self.send(self.class.friendly_id_options[:method].to_s + '_was'))
   end
 
 end
