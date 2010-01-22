@@ -1,13 +1,10 @@
-require "friendly_id/common_instance_methods"
-
 module FriendlyId::SluggableInstanceMethods
-  include FriendlyId::CommonInstanceMethods
 
   def self.included(base)
     base.class_eval do
       has_many :slugs, :order => 'id DESC', :as => :sluggable, :dependent => :destroy
       before_save :set_slug
-      after_save :set_slug_cache
+      after_save :set_slug_cache, :update_scopes
       # only protect the column if the class is not already using attributes_accessible
       if !accessible_attributes
         if friendly_id_options[:cache_column]
@@ -30,8 +27,6 @@ module FriendlyId::SluggableInstanceMethods
     end
 
   end
-
-  NUM_CHARS_RESERVED_FOR_FRIENDLY_ID_EXTENSION = 2
 
   attr :finder_slug
   attr_accessor :finder_slug_name
@@ -141,7 +136,6 @@ private
   # Set the slug using the generated friendly id.
   def set_slug
     if self.class.friendly_id_options[:use_slug] && new_slug_needed?
-      @prior_slug = @most_recent_slug
       @most_recent_slug = nil
       slug_attributes = {:name => slug_text}
       if friendly_id_options[:scope]
@@ -151,7 +145,8 @@ private
       # If we're renaming back to a previously used friendly_id, delete the
       # slug so that we can recycle the name without having to use a sequence.
       slugs.find(:all, :conditions => {:name => slug_text, :scope => slug_attributes[:scope]}).each { |s| s.destroy }
-      slugs.build slug_attributes
+      slug = slugs.build slug_attributes
+      @new_friendly_id = slug.to_friendly_id
     end
   end
 
@@ -160,11 +155,14 @@ private
       send "#{cache_column}=", slug.to_friendly_id
       send :update_without_callbacks
     end
-    update_association_slugs
   end
-  
-  def update_association_slugs
-    update_associated_slugs(@prior_slug.name) if @prior_slug
+
+  def update_scopes
+    if slugs(true).size > 1 && @new_friendly_id
+      self.class.child_scopes.each do |klass|
+        Slug.update_all "scope = '#{@new_friendly_id}'", ["sluggable_type = ? AND scope = ?", klass.to_s, slugs.second.to_friendly_id]
+      end
+    end
   end
 
 end

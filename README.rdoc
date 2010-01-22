@@ -371,6 +371,7 @@ particular from the following people:
 * Diego R. V.
 * Florian Aßmann
 * Harry Love
+* Ian Stewart
 * Jesse Crouch
 * Joe Van Dyk
 * Josh Nichols

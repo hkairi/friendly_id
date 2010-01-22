@@ -1,5 +1,6 @@
 require "friendly_id/helpers"
 require "friendly_id/slug"
+require "friendly_id/common_class_methods"
 require "friendly_id/sluggable_class_methods"
 require "friendly_id/sluggable_instance_methods"
 require "friendly_id/non_sluggable_class_methods"
@@ -67,6 +68,7 @@ module FriendlyId
       extend NonSluggableClassMethods
       include NonSluggableInstanceMethods
     end
+    extend CommonClassMethods
   end
 end
 

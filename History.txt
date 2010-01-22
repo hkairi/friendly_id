@@ -1,3 +1,10 @@
+== 2.2.8 2010-01-22
+
+* 1 major fix
+  * Updating scoped relations now updates the downstream slugs (Ian Stewart)
+* 1 minor fix
+  * Fixed slug not deleting some quote characters (Alexander Gräfe)
+
 == 2.2.7 2009-12-16
 
 * 1 minor fix

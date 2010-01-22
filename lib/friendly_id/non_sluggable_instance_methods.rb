@@ -1,13 +1,8 @@
-require "friendly_id/common_instance_methods"
-
 module FriendlyId::NonSluggableInstanceMethods
-  include FriendlyId::CommonInstanceMethods
 
   def self.included(base)
     base.validate :validate_friendly_id
-    base.class_eval do
-      after_save :update_association_slugs
-    end
+    base.after_save :update_scopes
   end
 
   attr :found_using_friendly_id
@@ -48,8 +43,16 @@ module FriendlyId::NonSluggableInstanceMethods
     @found_using_friendly_id = value
   end
   
-  def update_association_slugs
-    update_associated_slugs(self.send(self.class.friendly_id_options[:method].to_s + '_was'))
+  def friendly_id_changes
+    changes[friendly_id_options[:method].to_s]
+  end
+  
+  def update_scopes
+    if changes = friendly_id_changes
+      self.class.child_scopes.each do |klass|
+        Slug.update_all "scope = '#{changes[1]}'", ["sluggable_type = ? AND scope = ?", klass.to_s, changes[0]]
+      end
+    end
   end
 
 end
