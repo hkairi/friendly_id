@@ -1,3 +1,4 @@
+# encoding: utf-8
 # A Slug is a unique, human-friendly identifier for an ActiveRecord.
 class Slug < ActiveRecord::Base
 
