@@ -59,16 +59,16 @@ class ScopedModelTest < Test::Unit::TestCase
       end
     end
     
-    should "find a single scoped record after the base scope has had it's non-slugged friendly_id updated" do 
+    should "find a single scoped record after the base scope has had its non-slugged friendly_id updated" do 
       profile = Profile.create!(:name => "profile1")
       writing_sample = profile.writing_samples.create(:title => "My Sample", :profile => profile)
       profile.update_attribute :name, 'profile2'
       assert WritingSample.find(writing_sample.friendly_id, :scope => profile)
     end
     
-    should "find a single scoped record after the base scope (which also uses slugs) has had it's slugged friendly_id updated" do
-      @usa.update_attribute :name, 'Britain'
-      assert Resident.find(@resident.friendly_id, :scope => @usa)
+    should "find a single scoped record after the base scope (which also uses slugs) has had its slugged friendly_id updated" do
+      @usa.update_attribute :name, 'United States'
+      assert Resident.find(@resident.friendly_id, :scope => "united-states")
     end
 
   end
