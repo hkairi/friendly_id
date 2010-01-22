@@ -8,7 +8,6 @@ require 'rubygems'
 require 'test/unit'
 require 'contest'
 require 'mocha'
-require 'ruby-debug'
 
 # You can use "rake test AR_VERSION=2.2.3" to test against 2.2.3 for example.
 # The default is to use the latest installed ActiveRecord.
